@@ -1,6 +1,6 @@
 # Document management REST service
 
-Test project for WAES company. It has three REST end-points to add file content (left and right parts of a document separately) 
+Test project. It has three REST end-points to add file content (left and right parts of a document separately) 
 and compare it.
 
 ## Getting Started
@@ -33,27 +33,47 @@ Please, see 'Getting Started' section
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+Tests (Unit and Integration) are executed during the start of the application.
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+To build a war file that is both executable and deployable into an external container you need to mark the embedded container dependencies as “provided”, e.g:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- ... -->
+    <packaging>war</packaging>
+    <!-- ... -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- ... -->
+    </dependencies>
+</project>
+```
+
+## Using
+
+There are three end-points:
+```
+<host>/v1/diff/<ID>/left and <host>/v1/diff/<ID>/right
+ ```
+to store the data (content) 
+for the document with specified <ID>
+
+```
+<host>/v1/diff/<ID>
+```
+To get the differences between left and right part of the document with specified <ID>
 
 ## Built With
 
@@ -62,11 +82,6 @@ Add additional notes about how to deploy this on a live system
 * [Spring](https://spring.io/) - Framework with various of modules to build EE applications
 * [Spring-boot](http://projects.spring.io/spring-boot/) - The Easiest way to start application with Spring Framework
 * [H2 DB](http://www.h2database.com/html/main.html) - Embedded DB
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
 
 ## Authors
 
