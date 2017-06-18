@@ -56,6 +56,27 @@ public class CompareResult implements JacksonSettings {
 		public Integer getSize() {
 			return size;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass()) {
+				return false;
+			}
+
+			final DiffPart diffPart = (DiffPart) o;
+
+			return offset.equals(diffPart.offset) && size.equals(diffPart.size);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = offset.hashCode();
+			result = 31 * result + size.hashCode();
+			return result;
+		}
 	}
 
 	public enum Status {

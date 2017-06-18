@@ -1,9 +1,13 @@
 package com.waes.differentiator.domain.service;
 
-import com.waes.differentiator.domain.dao.DocumentPairEntityRepository;
+import com.waes.differentiator.domain.dao.DocumentEntityRepository;
+import com.waes.differentiator.domain.dao.DocumentPartEntityRepository;
 import com.waes.differentiator.domain.model.CompareResult;
 import com.waes.differentiator.domain.model.CompareResult.DiffPart;
-import com.waes.differentiator.domain.model.DocumentPairEntity;
+import com.waes.differentiator.domain.model.DocumentEntity;
+import com.waes.differentiator.domain.model.DocumentPartEntity;
+import com.waes.differentiator.domain.model.DocumentPartId;
+import com.waes.differentiator.domain.model.PartType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +23,13 @@ import java.util.List;
 @Service
 public class DocumentService {
 
-	private final DocumentPairEntityRepository documentPairDao;
+	private final DocumentEntityRepository documentDao;
+	private final DocumentPartEntityRepository documentPartDao;
 
 	@Autowired
-	public DocumentService(DocumentPairEntityRepository documentPairDao) {
-		this.documentPairDao = documentPairDao;
+	public DocumentService(DocumentEntityRepository documentDao, DocumentPartEntityRepository documentPartDao) {
+		this.documentDao = documentDao;
+		this.documentPartDao = documentPartDao;
 	}
 
 	/**
@@ -34,12 +40,23 @@ public class DocumentService {
 	 */
 	@Transactional
 	public void updateDocumentWithLeft(Long id, byte[] left) {
-		DocumentPairEntity documentPair = documentPairDao.findOne(id);
-		if (documentPair == null) {
-			documentPair = new DocumentPairEntity(id);
+		DocumentEntity document = documentDao.findDocumentForUpdateById(id);
+
+		if (document == null) {
+			document = documentDao.save(new DocumentEntity(id));
 		}
-		documentPair.setLeft(left);
-		documentPairDao.save(documentPair);
+
+		DocumentPartId documentPartId = new DocumentPartId(document, PartType.LEFT);
+		DocumentPartEntity documentPart = documentPartDao.findOne(documentPartId);
+		if (documentPart == null) {
+			documentPart = new DocumentPartEntity();
+			documentPart.setId(documentPartId);
+		}
+		documentPart.setContent(left);
+		documentPartDao.save(documentPart);
+		//document.setLeft(left);
+
+		//documentDao.save(document);
 	}
 
 	/**
@@ -50,12 +67,20 @@ public class DocumentService {
 	 */
 	@Transactional
 	public void updateDocumentWithRight(Long id, byte[] right) {
-		DocumentPairEntity documentPair = documentPairDao.findOne(id);
-		if (documentPair == null) {
-			documentPair = new DocumentPairEntity(id);
+		DocumentEntity document = documentDao.findDocumentForUpdateById(id);
+
+		if (document == null) {
+			document = documentDao.save(new DocumentEntity(id));
 		}
-		documentPair.setRight(right);
-		documentPairDao.save(documentPair);
+
+		DocumentPartId documentPartId = new DocumentPartId(document, PartType.RIGHT);
+		DocumentPartEntity documentPart = documentPartDao.findOne(documentPartId);
+		if (documentPart == null) {
+			documentPart = new DocumentPartEntity();
+			documentPart.setId(documentPartId);
+		}
+		documentPart.setContent(right);
+		documentPartDao.save(documentPart);
 	}
 
 	/**
@@ -66,12 +91,12 @@ public class DocumentService {
 	 * and list of diffs (offset+size) if two parts have the same size but different content
 	 */
 	public CompareResult diffDocument(Long id) {
-		DocumentPairEntity documentPair = documentPairDao.findOne(id);
-		if (documentPair == null) {
+		DocumentEntity document = documentDao.findOne(id);
+		if (document == null) {
 			return null;
 		}
-		byte[] left = documentPair.getLeft();
-		byte[] right = documentPair.getRight();
+		byte[] left = document.getLeft();
+		byte[] right = document.getRight();
 		CompareResult compareResult = new CompareResult(id);
 
 		if (left == null && right == null) {
@@ -88,7 +113,7 @@ public class DocumentService {
 		for (int i = 0; i < left.length; i++) {
 			if (left[i] != right[i]) {
 				int offset = i;
-				int size = 1;
+				int size = 0;
 				while (i < left.length && left[i] != right[i]) {
 					size++;
 					i++;
@@ -113,19 +138,18 @@ public class DocumentService {
 	 * @param id document id
 	 * @return Document entity
 	 */
-	public DocumentPairEntity readDocument(Long id) {
+	public DocumentEntity readDocument(Long id) {
 		if (id == null) {
 			return null;
 		}
-		return documentPairDao.findOne(id);
+		return documentDao.findOne(id);
 	}
 
 	/**
 	 * Deletes all documents
-	 *
 	 */
 	public void deleteAllDocuments() {
-		documentPairDao.deleteAll();
+		documentDao.deleteAll();
 	}
 
 }
