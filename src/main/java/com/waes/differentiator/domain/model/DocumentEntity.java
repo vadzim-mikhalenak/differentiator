@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
  * Entity representation of Document with left and right parts.
@@ -24,9 +23,10 @@ public class DocumentEntity {
 	@Column
 	private byte[] right;
 
-	@Version
+	// for optimistic lock.
+	/*@Version
 	@Column(name = "OPTLOCK")
-	private int version;
+	private int version;*/
 
 	public DocumentEntity(Long id) {
 		this.id = id;
@@ -56,7 +56,7 @@ public class DocumentEntity {
 		this.right = right;
 	}
 
-	public int getVersion() {
+	/*public int getVersion() {
 		return version;
-	}
+	}*/
 }
