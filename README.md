@@ -64,16 +64,83 @@ To build a war file that is both executable and deployable into an external cont
 ## Using
 
 There are three end-points:
+
+Two Post requests with Content-Type=application/json
+to store the data (content) 
+for the document with specified <ID>
+with Json body. Content of the request is validated to meet the requirement for base64 encoded data.
+
 ```
 <host>/v1/diff/<ID>/left and <host>/v1/diff/<ID>/right
  ```
-to store the data (content) 
-for the document with specified <ID>
+
+
+Example of request (Response with http code 200):
+
+```
+http://localhost:8080/v1/diff/1/left
+
+{
+	"content":"exampleContent"
+}
+ 
+```
+
+Invalid request:
+```
+http://localhost:8080/v1/diff/1/left
+
+{
+	"content":"example Content"
+}
+ 
+```
+
+
+One Get request to get the differences between left and right part of the document with specified <ID>
 
 ```
 <host>/v1/diff/<ID>
 ```
-To get the differences between left and right part of the document with specified <ID>
+Example of request:
+```
+http://localhost:8080/v1/diff/1
+
+ 
+```
+
+If there is no document with this ID you will receive response with http code 404 (Not Found) and description
+```
+{
+    "error_message": "There is no document with id: 1"
+}
+```
+
+If document's left and right parts are of the different size:
+```
+{
+    "status": "DIFFERENT_SIZE"
+}
+```
+
+If document's left and right parts have the same content:
+```
+{
+    "status": "EQUAL"
+}
+```
+
+If document's left and right parts are of the same size but of the different content you will recieve:
+
+```
+{
+    "status": "DIFFERENT_CONTENT",
+    "diffs" : [{"offset":0, "size":2}...]
+}
+```
+
+
+
 
 ## Built With
 

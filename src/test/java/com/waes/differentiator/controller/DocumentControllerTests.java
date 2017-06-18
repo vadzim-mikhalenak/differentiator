@@ -4,7 +4,7 @@ import com.waes.differentiator.DifferentiatorApplication;
 import com.waes.differentiator.TestConfiguration;
 import com.waes.differentiator.client.model.CompareResultResponse;
 import com.waes.differentiator.client.model.DocumentPartRequest;
-import com.waes.differentiator.domain.model.DocumentPairEntity;
+import com.waes.differentiator.domain.model.DocumentEntity;
 import com.waes.differentiator.domain.service.DocumentService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,9 +68,9 @@ public class DocumentControllerTests {
 				.contentType(contentType))
 				.andExpect(status().isOk());
 
-		DocumentPairEntity documentPairEntity = documentService.readDocument(1L);
-		Assert.assertNotNull(documentPairEntity);
-		Assert.assertNull(documentPairEntity.getLeft());
+		DocumentEntity documentEntity = documentService.readDocument(1L);
+		Assert.assertNotNull(documentEntity);
+		Assert.assertNull(documentEntity.getLeft());
 	}
 
 	@Test
@@ -80,9 +80,9 @@ public class DocumentControllerTests {
 				.contentType(contentType))
 				.andExpect(status().isOk());
 
-		DocumentPairEntity documentPairEntity = documentService.readDocument(1L);
-		Assert.assertNotNull(documentPairEntity);
-		Assert.assertNotNull(documentPairEntity.getLeft());
+		DocumentEntity documentEntity = documentService.readDocument(1L);
+		Assert.assertNotNull(documentEntity);
+		Assert.assertNotNull(documentEntity.getLeft());
 	}
 
 	@Test
@@ -92,9 +92,9 @@ public class DocumentControllerTests {
 				.contentType(contentType))
 				.andExpect(status().isOk());
 
-		DocumentPairEntity documentPairEntity = documentService.readDocument(1L);
-		Assert.assertNotNull(documentPairEntity);
-		Assert.assertNull(documentPairEntity.getRight());
+		DocumentEntity documentEntity = documentService.readDocument(1L);
+		Assert.assertNotNull(documentEntity);
+		Assert.assertNull(documentEntity.getRight());
 	}
 
 	@Test
@@ -104,9 +104,9 @@ public class DocumentControllerTests {
 				.contentType(contentType))
 				.andExpect(status().isOk());
 
-		DocumentPairEntity documentPairEntity = documentService.readDocument(1L);
-		Assert.assertNotNull(documentPairEntity);
-		Assert.assertNotNull(documentPairEntity.getRight());
+		DocumentEntity documentEntity = documentService.readDocument(1L);
+		Assert.assertNotNull(documentEntity);
+		Assert.assertNotNull(documentEntity.getRight());
 	}
 
 	/**

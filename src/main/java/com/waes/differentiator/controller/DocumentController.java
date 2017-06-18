@@ -63,8 +63,7 @@ public class DocumentController {
 		}
 	}
 
-	@RequestMapping(value = "{id}", method = RequestMethod.GET,
-			consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity getDiff(@PathVariable("id") Long id) {
 		logger.info("#{}: get diff", id);
 		CompareResult compareResult = documentService.diffDocument(id);
