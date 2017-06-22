@@ -1,3 +1,5 @@
+# REST Implementation of test assignment.
+
 # Document management REST service
 
 Test project. It has three REST end-points to add file content (left and right parts of a document separately) 
